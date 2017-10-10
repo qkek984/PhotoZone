@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+function afterDisplay(){
+		var ts = new Date().getTime();
+		$("#streaming_div").attr('style','display:none');
+		$("#email_div").attr('style','display');
+		$("#capture_div").attr('style','display');
+		$("#capture_div").html("<h2>Capture Result</h2>");
+		$("#capture_div").append("<img src='/capture?timestamp="+ts+"' width='640px' height='auto'/>");
+}
+function sleepDisplay2(){
+	$("#done_div").attr('style','display:none');
+	$("#streaming_div").attr('style','display');
+}
+
+function Count(num){
+	var now = new Date();
+	var stop = now.getTime()+num;
+	
+	while(true){
+		num=stop-now.getTime(); 
+		if(num%1000==0){
+
+			//console.log(num/1000);
+		}
+		now = new Date();
+		if(now.getTime()>stop){
+			$("#count_div").html("");
+			return;
+		}
+
+	}
+}
+
+$(document).ready(function(){
+
+    $("#capture_btn").click(function(event) {
+		var formData = $("#config_form").serialize();
+        $.get("/config?" + formData, function(capture) {
+            alert(capture);
+        	});
+		setTimeout("afterDisplay()",6000);
+        event.preventDefault();
+    	});
+
+	$("#email_btn").click(function(event) {
+        var formData = $("#email_form").serialize();
+        $.get("/emailserver?" + formData, function(email) {
+            alert(email);
+        	});
+		$("#capture_div").attr('style','display:none');
+		$("#email_div").attr('style','display:none');	
+		$("#done_div").attr('style','display');	
+		setTimeout("sleepDisplay2()",3000);
+		
+
+        event.preventDefault();
+    	});
+});
+</script>
+</head>
+
+
+<body>
+	<div id="streaming_div">
+		<img src="/video_feed" width='640px' height='auto'>
+		<div id="count_div"><br></div>
+		<form id="config_form">
+			<input type="hidden" id='capture' name="capture" value="1">
+			<input type="submit" id="capture_btn" name="capture_btn" value="Capture">
+		</form>
+	</div>
+
+	<div id="capture_div"></div>
+
+	<div id="email_div" style="display:none">
+		<form id="email_form">
+			E-mail <input type="text" id='email' name="email">
+			<input type="submit" id="email_btn" name="email_btn" value="Submit">
+		</form>
+	</div>
+
+	<div id="done_div" style="display:none">done</div>
+	
+	
+	
+</body>
+</html>
