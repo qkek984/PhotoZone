@@ -7,16 +7,17 @@
 function afterDisplay(){
 		var ts = new Date().getTime();
 		$("#streaming_div").attr('style','display:none');
-		$("#email_div").attr('style','display');
-		$("#capture_div").attr('style','display');
-		$("#capture_div").html("<h2>Capture Result</h2>");
-		$("#capture_div").append("<img src='/capture?timestamp="+ts+"' width='640px' height='auto'/>");
+		$("#select_div").attr('style','display');
+		$("#goMain_div").attr('style','display');
+		$("#picture_div").attr('style','display');
+		$("#picture_div").html("<h2>Capture Result</h2>");
+		$("#picture_div").append("<img src='/capture?timestamp="+ts+"' width='640px' height='auto'/>");
+
 }
 function sleepDisplay2(){
+	$("#main_div").attr('style','display');
 	$("#done_div").attr('style','display:none');
-	$("#streaming_div").attr('style','display');
 }
-
 function Count(num){
 	var now = new Date();
 	var stop = now.getTime()+num;
@@ -24,7 +25,6 @@ function Count(num){
 	while(true){
 		num=stop-now.getTime(); 
 		if(num%1000==0){
-
 			//console.log(num/1000);
 		}
 		now = new Date();
@@ -32,33 +32,83 @@ function Count(num){
 			$("#count_div").html("");
 			return;
 		}
-
 	}
 }
-
 $(document).ready(function(){
-
-    $("#capture_btn").click(function(event) {
+	$("#mainEscape_btn").click(function(event) {
+		$("#main_div").attr('style','display:none');
+		$("#streaming_div").attr('style','display');
+		
+        	event.preventDefault();
+    	});
+	$("#goMain_btn").click(function(event) {
+		
+		$("#picture_div").attr('style','display:none');
+		$("#email_div").attr('style','display:none');
+		$("#phone_div").attr('style','display:none');
+		$("#select_div").attr('style','display:none');
+		$("#goMain_div").attr('style','display:none');
+		$("#back_div").attr('style','display:none');
+		$("#main_div").attr('style','display');
+        	event.preventDefault();
+    	});
+	$("#capture_btn").click(function(event) {
 		var formData = $("#config_form").serialize();
-        $.get("/config?" + formData, function(capture) {
-            alert(capture);
+        	$.get("/config?" + formData, function(capture) {
+            	alert(capture);
         	});
 		setTimeout("afterDisplay()",6000);
-        event.preventDefault();
+        	event.preventDefault();
+    	});
+	$("#selectEmail_btn").click(function(event) {
+		$("#email_div").attr('style','display');
+		$("#back_div").attr('style','display');
+		$("#select_div").attr('style','display:none');
+        	event.preventDefault();
+    	});
+
+	$("#selectPhone_btn").click(function(event) {
+		$("#phone_div").attr('style','display');
+		$("#back_div").attr('style','display');
+		$("#select_div").attr('style','display:none');
+        	event.preventDefault();
+    	});
+
+	$("#back_btn").click(function(event) {
+		$("#back_div").attr('style','display:none');
+		$("#selectEmail_div").attr('style','display:none');
+		$("#selectPhone_div").attr('style','display:none');
+		$("#email_div").attr('style','display:none');
+		$("#phone_div").attr('style','display:none');
+		$("#select_div").attr('style','display');
+        	event.preventDefault();
     	});
 
 	$("#email_btn").click(function(event) {
-        var formData = $("#email_form").serialize();
-        $.get("/emailserver?" + formData, function(email) {
-            alert(email);
+        	var formData = $("#email_form").serialize();
+        	$.get("/emailserver?" + formData, function(email) {
+            	alert(email);
         	});
-		$("#capture_div").attr('style','display:none');
-		$("#email_div").attr('style','display:none');	
-		$("#done_div").attr('style','display');	
-		setTimeout("sleepDisplay2()",3000);
 		
+		$("#picture_div").attr('style','display:none');
+		$("#email_div").attr('style','display:none');
+		$("#select_div").attr('style','display:none');	
+		$("#goMain_div").attr('style','display:none');
+		$("#done_div").attr('style','display');
+		$("#back_div").attr('style','display:none');
+		setTimeout("sleepDisplay2()",3000);
+        	event.preventDefault();
+    	});
 
-        event.preventDefault();
+	$("#phone_btn").click(function(event) {
+		$("#picture_div").attr('style','display:none');
+		$("#phone_div").attr('style','display:none');
+		$("#select_div").attr('style','display:none');
+		$("#goMain_div").attr('style','display:none');
+		$("#done_div").attr('style','display');
+		$("#back_div").attr('style','display:none');
+		setTimeout("sleepDisplay2()",3000);
+        	event.preventDefault();
     	});
 });
 </script>
@@ -66,7 +116,11 @@ $(document).ready(function(){
 
 
 <body>
-	<div id="streaming_div">
+	<div id="main_div">
+		<input type="submit" id="mainEscape_btn" value="사진촬영">
+	</div>
+
+	<div id="streaming_div" style="display:none">
 		<img src="/video_feed" width='640px' height='auto'>
 		<div id="count_div"><br></div>
 		<form id="config_form">
@@ -75,7 +129,19 @@ $(document).ready(function(){
 		</form>
 	</div>
 
-	<div id="capture_div"></div>
+	<div id="goMain_div" style="display:none">
+		<input type="submit" id="goMain_btn" value="main">
+	</div>
+	<div id="back_div" style="display:none">
+		<input type="submit" id="back_btn" value="back">
+	</div>
+
+	<div id="picture_div"></div>
+
+	<div id="select_div" style="display:none">
+		<input type="submit" id="selectEmail_btn" value="Email">
+		<input type="submit" id="selectPhone_btn" value="Phone">
+	</div>
 
 	<div id="email_div" style="display:none">
 		<form id="email_form">
@@ -84,9 +150,11 @@ $(document).ready(function(){
 		</form>
 	</div>
 
+	<div id="phone_div" style="display:none">
+		Phone <input type="text">-<input type="text">-<input type="text">
+		<input type="submit" id="phone_btn">
+	</div>
+
 	<div id="done_div" style="display:none">done</div>
-	
-	
-	
 </body>
 </html>
