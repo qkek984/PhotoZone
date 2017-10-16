@@ -43,9 +43,16 @@ def e_mail(to_email):
     imageFD=open(files,'rb')
     imagePart=MIMEImage(imageFD.read())
     imageFD.close()
+    
+    files2 = 'data/coupon.jpg'
+    imageFD2=open(files2,'rb')
+    imagePart2=MIMEImage(imageFD2.read())
+    imageFD2.close()
 
     msg.attach(imagePart)
     msg.add_header('Content-Disposition','attachment',filename=files)
+    msg.attach(imagePart2)
+    msg.add_header('Content-Disposition','attachment',filename=files2)
     smtp.sendmail('qkek984@naver.com', to_email, msg.as_string())
     smtp.quit()
 
