@@ -8,7 +8,7 @@ from email.mime.base import MIMEBase
 smtp = smtplib.SMTP('smtp.naver.com', 587)
 smtp.ehlo()      # say Hello
 smtp.starttls()  # TLS 사용시 필요
-smtp.login('qkek984@naver.com', 'dkagh752')
+smtp.login('qkek984@naver.com', '*****')
 
 files = 'data/capture.jpg'
 
